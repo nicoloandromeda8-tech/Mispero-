@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mispero Comic</title>
+ 
+<style>
+:root {
+  --beige: #e9dfc9;
+  --beige-light: #f7f1e5;
+  --green: #183d2b;
+  --green-light: #315941;
+  --black: #111511;
+  --white: #fffaf0;
+}
+ 
+* { box-sizing: border-box; }
+ 
+body {
+  margin: 0;
+  background: var(--beige-light);
+  color: var(--black);
+  font-family: Georgia, serif;
+}
+ 
+header {
+  background: var(--green);
+  color: var(--beige);
+  padding: 24px 7%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  border-bottom: 5px solid var(--black);
+}
+ 
+.logo {
+  font-family: "Brush Script MT", "Segoe Script", cursive;
+  font-size: clamp(34px, 5vw, 55px);
+  font-weight: bold;
+  margin: 0;
+}
+ 
+header p {
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin: 4px 0 0;
+}
+ 
+button {
+  cursor: pointer;
+  font-family: inherit;
+  transition: .2s;
+}
+ 
+button:hover { transform: translateY(-2px); }
+ 
+.admin-button, .main-button {
+  background: var(--beige);
+  color: var(--green);
+  border: 1px solid var(--beige);
+  padding: 12px 18px;
+  font-weight: bold;
+}
+ 
+main {
+  max-width: 1250px;
+  margin: auto;
+  padding: 35px 6%;
+}
+ 
+.hero {
+  min-height: 260px;
+  padding: 38px;
+  background: var(--green);
+  color: var(--beige);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 2px solid var(--black);
+  position: relative;
+  overflow: hidden;
+}
+ 
+.hero::after {
+  content: "M";
+  position: absolute;
+  right: 25px;
+  bottom: -105px;
+  font-size: 290px;
+  font-family: "Brush Script MT", cursive;
+  color: #ffffff0b;
+  pointer-events: none;
+}
+ 
+.hero h2 {
+  font-family: "Brush Script MT", "Segoe Script", cursive;
+  font-size: clamp(42px, 7vw, 75px);
+  font-weight: normal;
+  margin: 0 0 12px;
+}
+ 
+.hero p { max-width: 500px; line-height: 1.7; }
+ 
+.section-title {
+  margin: 42px 0 20px;
+  border-bottom: 2px solid var(--green);
+  padding-bottom: 12px;
+  font-size: 25px;
+}
+ 
+.toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+ 
+.action {
+  background: var(--green);
+  color: var(--beige);
+  border: 1px solid var(--green);
+  padding: 10px 15px;
+}
+ 
+.secondary {
+  background: transparent;
+  color: var(--green);
+  border: 1px solid var(--green);
+  padding: 10px 15px;
+}
+ 
+.story-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 24px;
+}
+ 
+.story-card {
+  background: var(--white);
+  border: 1px solid #c9bea8;
+  padding: 9px;
+  cursor: pointer;
+  position: relative;
+  transition: .25s;
+  user-select: none;
+  -webkit-user-select: none;
+}
+ 
+.story-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 6px 7px 0 #183d2b25;
+}
+ 
+/* Portadas rectangulares verticales (2:3) */
+.cover-box {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background: var(--green);
+  overflow: hidden;
+}
+ 
+.cover-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+ 
+.cover-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 16px;
+  color: var(--beige);
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: .85;
+}
+ 
+.cover-box.drag-over::after {
+  content: "Suelta la imagen aquí";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: #183d2bdd;
+  border: 3px dashed var(--beige);
+  color: var(--beige);
+  font-size: 14px;
+}
+ 
+.story-info { padding: 12px 5px 7px; }
+ 
+.story-info h3 {
+  margin: 0 0 7px;
+  color: var(--green);
+  font-size: 20px;
+  overflow-wrap: anywhere;
+}
+ 
+.story-info p {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #665f50;
+  margin: 0 0 6px;
+}
+ 
+.admin-tag {
+  display: inline-block;
+  font-size: 10px;
+  background: var(--green);
+  color: white;
+  padding: 5px 8px;
+  margin-bottom: 8px;
+}
+ 
+.hidden { display: none !important; }
+ 
+.panel {
+  background: #dfd4bd;
+  border: 1px solid #b8ab91;
+  padding: 20px;
+  margin: 25px 0;
+}
+ 
+.panel h3 { color: var(--green); }
+ 
+input, textarea, select {
+  width: 100%;
+  padding: 12px;
+  margin: 7px 0 15px;
+  background: var(--white);
+  border: 1px solid #b8ab91;
+  color: var(--black);
+  font: inherit;
+}
+ 
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+ 
+label {
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--green);
+}
+ 
+.page-reader {
+  background: var(--black);
+  color: var(--beige);
+  padding: 20px;
+  text-align: center;
+}
+ 
+.page-reader.drag-over {
+  outline: 3px dashed var(--beige);
+  outline-offset: -10px;
+}
+ 
+.page-reader img {
+  max-width: 100%;
+  max-height: 75vh;
+  object-fit: contain;
+}
+ 
+.page-text {
+  max-width: 700px;
+  margin: 20px auto;
+  white-space: pre-wrap;
+  line-height: 1.9;
+  text-align: left;
+}
+ 
+.reader-controls {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin: 18px 0;
+}
+ 
+.drop-zone {
+  border: 2px dashed var(--beige);
+  padding: 20px;
+  margin: 22px auto 0;
+  max-width: 700px;
+  font-size: 14px;
+  line-height: 1.8;
+}
+ 
+/* Estrellas */
+.star-block { margin-top: 8px; }
+ 
+.star-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--green);
+  color: var(--green);
+  padding: 6px 12px;
+  font-size: 15px;
+}
+ 
+.star-btn.on { background: var(--green); color: #f2c94c; }
+ 
+.star-note {
+  display: block;
+  font-size: 11px;
+  color: #665f50;
+  margin-top: 6px;
+}
+ 
+.page-reader .star-btn { border-color: var(--beige); color: var(--beige); }
+.page-reader .star-btn.on { background: var(--beige); color: var(--green); }
+.page-reader .star-note { color: var(--beige); }
+ 
+.spark {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+}
+ 
+/* Menú de clic derecho */
+.ctx-menu {
+  position: fixed;
+  z-index: 10000;
+  min-width: 210px;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+  border: 1px solid var(--black);
+  box-shadow: 5px 6px 0 #183d2b40;
+}
+ 
+.ctx-menu button {
+  background: transparent;
+  border: 0;
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--green);
+}
+ 
+.ctx-menu button:hover { background: var(--beige); transform: none; }
+.ctx-menu button.danger { color: #9b1c1c; }
+ 
+footer {
+  background: var(--black);
+  color: var(--beige);
+  text-align: center;
+  padding: 35px 15px;
+  margin-top: 55px;
+  font-size: 13px;
+}
+ 
+footer span {
+  font-family: "Brush Script MT", cursive;
+  font-size: 28px;
+}
+ 
+.notice {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #625947;
+}
+ 
+@media (max-width: 500px) {
+  header { padding: 20px; }
+  main { padding: 22px 16px; }
+  .hero { padding: 25px; }
+  .story-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+}
+ 
+@media (prefers-reduced-motion: reduce) {
+  button:hover, .story-card:hover { transform: none; }
+}
+</style>
+</head>
+ 
+<body>
+ 
+<header>
+  <div>
+    <h1 class="logo">Mispero Comic</h1>
+    <p>espero les guste mis historias</p>
+  </div>
+  <button class="admin-button" onclick="login()">
+    ⚿ Administrador
+  </button>
+</header>
+ 
+<main>
+  <section id="home">
+    <div class="hero">
+      <h2>Un mundo entre páginas...</h2>
+      <p>
+        
+      </p>
+      <div>
+        <button class="main-button"
+          onclick="document.getElementById('biblioteca').scrollIntoView({behavior:'smooth'})">
+          Explorar historias ↗
+        </button>
+      </div>
+    </div>
+ 
+    <h2 class="section-title" id="biblioteca">La biblioteca</h2>
+    <div id="adminToolbar" class="toolbar hidden">
+      <button class="action" onclick="addStory()">＋ Nueva historia</button>
+      <button class="secondary" onclick="exportBackup()">Guardar copia JSON</button>
+      <button class="secondary" onclick="importBackup()">Importar copia</button>
+      <button class="secondary" onclick="logout()">Cerrar sesión</button>
+    </div>
+ 
+    <div id="stories" class="story-grid"></div>
+    <p id="empty" class="notice hidden">
+      Todavía no hay historias. Entra como administrador para crear la primera.
+    </p>
+  </section>
+ 
+  <section id="detail" class="hidden">
+    <div class="toolbar">
+      <button class="secondary" onclick="goHome()">← Biblioteca</button>
+    </div>
+    <div id="detailContent"></div>
+  </section>
+ 
+  <section id="reader" class="hidden">
+    <div class="toolbar">
+      <button class="secondary" onclick="backToChapters()">← Capítulos</button>
+    </div>
+    <div id="readerContent"></div>
+  </section>
+ 
+  <section id="adminPanel" class="panel hidden">
+    <h3>Panel del administrador</h3>
+    <p>Desde aquí puedes administrar tu biblioteca.</p>
+    <p class="notice">
+      Haz clic derecho sobre una historia, un capítulo o una página para
+      renombrar, cambiar la portada o eliminar. En teléfonos, mantén pulsado.<br>
+      Para poner una portada, arrastra una imagen encima de la portada.
+      Para añadir páginas, arrastra las imágenes dentro del lector del capítulo.
+    </p>
+  </section>
+</main>
+ 
+<footer>
+  <span>Mispero Comic</span>
+  <p>Un universo propio, página por página.</p>
+</footer>
+ 
+<div id="ctxMenu" class="ctx-menu hidden" role="menu"></div>
+ 
+<script>
+// CAMBIA ESTA CONTRASEÑA SI LO NECESITAS
+const OWNER_PASSWORD = "nico000$#";
+ 
+const KEY = "mispero_comic_library_v1";
+const LIKES_KEY = "mispero_comic_likes_v1";
+let isAdmin = false;
+let currentStoryId = null;
+let currentChapterId = null;
+let currentPageIndex = 0;
+ 
+function id() {
+  return Date.now().toString(36) +
+    Math.random().toString(36).slice(2, 7);
+}
+ 
+const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+ 
+function loadData() {
+  try {
+    return JSON.parse(localStorage.getItem(KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+ 
+let stories = loadData();
+ 
+function normalize() {
+  stories.forEach(s => {
+    s.chapters = s.chapters || [];
+    s.chapters.forEach(c => {
+      c.pages = c.pages || [];
+      c.stars = c.stars || 0;
+    });
+  });
+}
+normalize();
+ 
+// Estrellas que ESTE navegador ya dio (para no sumar dos veces)
+let liked;
+try {
+  liked = new Set(JSON.parse(localStorage.getItem(LIKES_KEY) || "[]"));
+} catch {
+  liked = new Set();
+}
+ 
+function saveLikes() {
+  try { localStorage.setItem(LIKES_KEY, JSON.stringify([...liked])); } catch {}
+}
+ 
+function save() {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(stories));
+  } catch {
+    alert("No se pudo guardar: el navegador se quedó sin espacio. " +
+      "Guarda una copia JSON y usa imágenes más pequeñas.");
+    return false;
+  }
+  renderStories();
+  return true;
+}
+ 
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[ch]);
+}
+ 
+function safeImage(url) {
+  if (!url) return "";
+  if (/^data:image\/(jpeg|png|webp|gif);base64,/i.test(url)) return url;
+  try {
+    const u = new URL(url, location.href);
+    return ["http:", "https:", "file:"].includes(u.protocol)
+      ? u.href : "";
+  } catch {
+    return "";
+  }
+}
+ 
+/* ---------- Imágenes: leer, reducir y guardar ---------- */
+ 
+function fileToDataURL(file, maxW, maxH, quality) {
+  return new Promise((resolve, reject) => {
+    if (!file || !file.type.startsWith("image/")) {
+      return reject(new Error("No es una imagen"));
+    }
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = () => {
+        const scale = Math.min(1, maxW / img.width, maxH / img.height);
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(img.width * scale));
+        canvas.height = Math.max(1, Math.round(img.height * scale));
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+ 
+function pickImages(multiple, callback) {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "image/*";
+  input.multiple = multiple;
+  input.onchange = () => {
+    const files = [...input.files];
+    if (files.length) callback(files);
+  };
+  input.click();
+}
+ 
+function hasFiles(event) {
+  return event.dataTransfer &&
+    [...event.dataTransfer.types].includes("Files");
+}
+ 
+function makeDropZone(el, onFiles, multiple = false) {
+  ["dragenter", "dragover"].forEach(type => {
+    el.addEventListener(type, event => {
+      if (!isAdmin || !hasFiles(event)) return;
+      event.preventDefault();
+      el.classList.add("drag-over");
+    });
+  });
+ 
+  el.addEventListener("dragleave", () => el.classList.remove("drag-over"));
+ 
+  el.addEventListener("drop", event => {
+    el.classList.remove("drag-over");
+    if (!isAdmin || !hasFiles(event)) return;
+    event.preventDefault();
+    event.stopPropagation();
+ 
+    const files = [...event.dataTransfer.files]
+      .filter(f => f.type.startsWith("image/"));
+    if (!files.length) {
+      alert("Arrastra un archivo de imagen (JPG, PNG o WebP).");
+      return;
+    }
+    onFiles(multiple ? files : files.slice(0, 1));
+  });
+}
+ 
+// Evita que el navegador abra la imagen si se suelta fuera de una zona
+window.addEventListener("dragover", e => e.preventDefault());
+window.addEventListener("drop", e => e.preventDefault());
+ 
+function emptyCover(text) {
+  const el = document.createElement("div");
+  el.className = "cover-empty";
+  el.textContent = isAdmin ? "Arrastra una imagen aquí para la portada" : text;
+  return el;
+}
+ 
+function buildCover(src, fallbackText, alt) {
+  const box = document.createElement("div");
+  box.className = "cover-box";
+  const safe = safeImage(src);
+ 
+  if (safe) {
+    const img = document.createElement("img");
+    img.src = safe;
+    img.alt = alt;
+    img.draggable = false;
+    img.onerror = () => {
+      img.remove();
+      box.appendChild(emptyCover(fallbackText));
+    };
+    box.appendChild(img);
+  } else {
+    box.appendChild(emptyCover(fallbackText));
+  }
+  return box;
+}
+ 
+/* ---------- Menú de clic derecho ---------- */
+ 
+const menu = document.getElementById("ctxMenu");
+ 
+function hideMenu() {
+  menu.classList.add("hidden");
+  menu.innerHTML = "";
+}
+ 
+function showMenu(x, y, items) {
+  menu.innerHTML = "";
+  items.forEach(item => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = item.label;
+    if (item.danger) btn.className = "danger";
+    btn.onclick = () => {
+      hideMenu();
+      item.action();
+    };
+    menu.appendChild(btn);
+  });
+ 
+  menu.classList.remove("hidden");
+  const r = menu.getBoundingClientRect();
+  menu.style.left = Math.max(8, Math.min(x, innerWidth - r.width - 8)) + "px";
+  menu.style.top = Math.max(8, Math.min(y, innerHeight - r.height - 8)) + "px";
+}
+ 
+function attachContextMenu(el, getItems) {
+  el.addEventListener("contextmenu", event => {
+    if (!isAdmin) return; // los visitantes ven el menú normal del navegador
+    event.preventDefault();
+    event.stopPropagation();
+    showMenu(event.clientX, event.clientY, getItems());
+  });
+ 
+  // Mantener pulsado en el teléfono
+  let timer;
+  el.addEventListener("touchstart", event => {
+    el._lp = false;
+    if (!isAdmin) return;
+    const t = event.touches[0];
+    timer = setTimeout(() => {
+      el._lp = true;
+      showMenu(t.clientX, t.clientY, getItems());
+    }, 600);
+  }, { passive: true });
+ 
+  ["touchend", "touchmove", "touchcancel"].forEach(type => {
+    el.addEventListener(type, () => clearTimeout(timer));
+  });
+}
+ 
+document.addEventListener("pointerdown", event => {
+  if (!event.target.closest("#ctxMenu")) hideMenu();
+});
+window.addEventListener("scroll", hideMenu, { passive: true });
+window.addEventListener("resize", hideMenu);
+ 
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") hideMenu();
+  if (document.getElementById("reader").classList.contains("hidden")) return;
+  if (event.key === "ArrowRight") nextPage(true);
+  if (event.key === "ArrowLeft") previousPage();
+});
+ 
+function storyMenu(storyId) {
+  return [
+    { label: "Renombrar historia", action: () => renameStory(storyId) },
+    { label: "Cambiar portada…", action: () =>
+        pickImages(false, f => setStoryCover(storyId, f[0])) },
+    { label: "Editar descripción", action: () => editDescription(storyId) },
+    { label: "＋ Añadir capítulo", action: () => addChapter(storyId) },
+    { label: "Eliminar historia", danger: true, action: () => deleteStory(storyId) }
+  ];
+}
+ 
+function chapterMenu(chapterId) {
+  return [
+    { label: "Renombrar capítulo", action: () => renameChapter(chapterId) },
+    { label: "Cambiar portada…", action: () =>
+        pickImages(false, f => setChapterCover(chapterId, f[0])) },
+    { label: "Eliminar capítulo", danger: true, action: () => deleteChapter(chapterId) }
+  ];
+}
+ 
+function pageMenu(pageId) {
+  return [
+    { label: "Reemplazar imagen…", action: () =>
+        pickImages(false, f => replacePageImage(pageId, f[0])) },
+    { label: "Eliminar página", danger: true, action: () => deletePage(pageId) }
+  ];
+}
+ 
+/* ---------- Sesión de administrador ---------- */
+ 
+function refresh() {
+  if (!document.getElementById("reader").classList.contains("hidden")) {
+    renderPage();
+  } else if (!document.getElementById("detail").classList.contains("hidden")) {
+    openStory(currentStoryId);
+  } else {
+    renderStories();
+  }
+}
+ 
+function login() {
+  if (isAdmin) {
+    logout();
+    return;
+  }
+ 
+  const password = prompt("Contraseña de administrador:");
+  if (password === null) return;
+ 
+  if (password === OWNER_PASSWORD) {
+    isAdmin = true;
+    document.getElementById("adminToolbar").classList.remove("hidden");
+    document.getElementById("adminPanel").classList.remove("hidden");
+    refresh();
+    alert("Sesión de administrador iniciada.");
+  } else {
+    alert("Contraseña incorrecta.");
+  }
+}
+ 
+function logout() {
+  isAdmin = false;
+  hideMenu();
+  document.getElementById("adminToolbar").classList.add("hidden");
+  document.getElementById("adminPanel").classList.add("hidden");
+  renderStories();
+  goHome();
+}
+ 
+/* ---------- Estrellas ---------- */
+ 
+function starsText(n) {
+  if (!n) return "Aún nadie ha dado su estrella a este capítulo";
+  if (n === 1) return "A 1 persona le gustó este capítulo";
+  return `A ${n} personas les gustó este capítulo`;
+}
+ 
+function fireworks(el) {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const r = el.getBoundingClientRect();
+  const cx = r.left + r.width / 2;
+  const cy = r.top + r.height / 2;
+  const colors = ["#f2c94c", "#e76f51", "#f4f1de", "#8ecae6", "#b5e48c", "#ff99c8"];
+ 
+  for (let i = 0; i < 22; i++) {
+    const p = document.createElement("span");
+    p.className = "spark";
+    p.style.left = cx + "px";
+    p.style.top = cy + "px";
+    p.style.background = colors[i % colors.length];
+    document.body.appendChild(p);
+ 
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 30 + Math.random() * 45;
+    p.animate([
+      { transform: "translate(-50%, -50%) scale(1)", opacity: 1 },
+      { transform: `translate(calc(-50% + ${Math.cos(angle) * dist}px), calc(-50% + ${Math.sin(angle) * dist}px)) scale(0)`, opacity: 0 }
+    ], {
+      duration: 650 + Math.random() * 350,
+      easing: "cubic-bezier(.1,.7,.3,1)"
+    }).onfinish = () => p.remove();
+  }
+}
+ 
+function starBlock(chapter) {
+  const wrap = document.createElement("div");
+  wrap.className = "star-block";
+ 
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "star-btn";
+ 
+  const note = document.createElement("small");
+  note.className = "star-note";
+ 
+  function paint() {
+    const on = liked.has(chapter.id);
+    btn.classList.toggle("on", on);
+    btn.innerHTML = `<span aria-hidden="true">${on ? "★" : "☆"}</span> ${chapter.stars || 0}`;
+    btn.setAttribute("aria-pressed", on);
+    btn.title = on ? "Quitar mi estrella" : "Me gustó este capítulo";
+    note.textContent = starsText(chapter.stars || 0);
+  }
+ 
+  btn.addEventListener("click", event => {
+    event.stopPropagation();
+    const was = liked.has(chapter.id);
+    if (was) {
+      liked.delete(chapter.id);
+      chapter.stars = Math.max(0, (chapter.stars || 0) - 1);
+    } else {
+      liked.add(chapter.id);
+      chapter.stars = (chapter.stars || 0) + 1;
+    }
+    saveLikes();
+    save();
+    paint();
+    if (!was) fireworks(btn);
+  });
+ 
+  paint();
+  wrap.append(btn, note);
+  return wrap;
+}
+ 
+/* ---------- Biblioteca ---------- */
+ 
+function renderStories() {
+  const container = document.getElementById("stories");
+  container.innerHTML = "";
+ 
+  document.getElementById("empty").classList.toggle(
+    "hidden", stories.length > 0
+  );
+ 
+  stories.forEach(story => {
+    const card = document.createElement("article");
+    card.className = "story-card";
+ 
+    const total = story.chapters.reduce((n, c) => n + (c.stars || 0), 0);
+ 
+    if (isAdmin) {
+      const tag = document.createElement("span");
+      tag.className = "admin-tag";
+      tag.textContent = "MODO ADMIN";
+      card.appendChild(tag);
+    }
+ 
+    const cover = buildCover(story.cover, story.title, "Portada de " + story.title);
+    card.appendChild(cover);
+ 
+    const info = document.createElement("div");
+    info.className = "story-info";
+    info.innerHTML = `
+      <h3>${escapeHTML(story.title)}</h3>
+      <p>${escapeHTML(story.description || "Una nueva aventura.")}</p>
+      <p title="Estrellas de todos sus capítulos">★ ${total} · ${plural(story.chapters.length, "capítulo", "capítulos")}</p>
+    `;
+    card.appendChild(info);
+ 
+    card.addEventListener("click", () => {
+      if (card._lp) { card._lp = false; return; }
+      openStory(story.id);
+    });
+ 
+    attachContextMenu(card, () => storyMenu(story.id));
+    makeDropZone(cover, files => setStoryCover(story.id, files[0]));
+ 
+    container.appendChild(card);
+  });
+}
+ 
+function addStory() {
+  if (!isAdmin) return;
+  const title = prompt("Nombre de la historia:");
+  if (!title?.trim()) return;
+ 
+  const description = prompt("Descripción de la historia:") || "";
+ 
+  stories.push({
+    id: id(),
+    title: title.trim(),
+    cover: "",
+    description: description.trim(),
+    chapters: []
+  });
+ 
+  save();
+}
+ 
+function renameStory(storyId) {
+  if (!isAdmin) return;
+  const story = stories.find(s => s.id === storyId);
+  if (!story) return;
+ 
+  const title = prompt("Nuevo nombre de la historia:", story.title);
+  if (title === null || !title.trim()) return;
+ 
+  story.title = title.trim();
+  if (save()) refresh();
+}
+ 
+function editDescription(storyId) {
+  if (!isAdmin) return;
+  const story = stories.find(s => s.id === storyId);
+  if (!story) return;
+ 
+  const description = prompt("Descripción:", story.description || "");
+  if (description === null) return;
+ 
+  story.description = description.trim();
+  if (save()) refresh();
+}
+ 
+async function setStoryCover(storyId, file) {
+  if (!isAdmin) return;
+  const story = stories.find(s => s.id === storyId);
+  if (!story) return;
+ 
+  try {
+    const data = await fileToDataURL(file, 600, 900, 0.85);
+    const old = story.cover;
+    story.cover = data;
+    if (!save()) story.cover = old;
+    else refresh();
+  } catch {
+    alert("No pude leer esa imagen. Usa un archivo JPG, PNG o WebP.");
+  }
+}
+ 
+function deleteStory(storyId) {
+  if (!isAdmin || !confirm("¿Eliminar esta historia y todo su contenido?")) return;
+  stories = stories.filter(s => s.id !== storyId);
+  save();
+  goHome();
+}
+ 
+/* ---------- Capítulos ---------- */
+ 
+function addChapter(storyId) {
+  if (!isAdmin) return;
+  const story = stories.find(s => s.id === storyId);
+  if (!story) return;
+ 
+  const title = prompt("Nombre del capítulo:");
+  if (!title?.trim()) return;
+ 
+  story.chapters.push({
+    id: id(),
+    title: title.trim(),
+    cover: "",
+    stars: 0,
+    pages: []
+  });
+ 
+  save();
+  openStory(storyId);
+}
+ 
+function openStory(storyId) {
+  const story = stories.find(s => s.id === storyId);
+  if (!story) return;
+ 
+  currentStoryId = storyId;
+  document.getElementById("home").classList.add("hidden");
+  document.getElementById("reader").classList.add("hidden");
+  document.getElementById("detail").classList.remove("hidden");
+ 
+  const detail = document.getElementById("detailContent");
+  detail.innerHTML = `
+    <h2 class="section-title">${escapeHTML(story.title)}</h2>
+    <p>${escapeHTML(story.description || "")}</p>
+    ${isAdmin ? `
+      <div class="toolbar">
+        <button class="action" onclick="addChapter('${story.id}')">＋ Nuevo capítulo</button>
+        <button class="secondary" onclick="renameStory('${story.id}')">Renombrar historia</button>
+        <button class="secondary" onclick="editDescription('${story.id}')">Editar descripción</button>
+      </div>
+      <p class="notice">Clic derecho sobre un capítulo para renombrarlo, cambiar su portada o eliminarlo. También puedes arrastrar una imagen sobre su portada.</p>
+    ` : ""}
+    <h3>Capítulos</h3>
+    <div id="chaptersList" class="story-grid"></div>
+  `;
+ 
+  const list = detail.querySelector("#chaptersList");
+ 
+  if (!story.chapters.length) {
+    list.className = "";
+    list.innerHTML = "<p>Aún no hay capítulos publicados.</p>";
+    return;
+  }
+ 
+  story.chapters.forEach((chapter, index) => {
+    const card = document.createElement("article");
+    card.className = "story-card";
+ 
+    const cover = buildCover(chapter.cover, chapter.title, "Portada de " + chapter.title);
+    card.appendChild(cover);
+ 
+    const info = document.createElement("div");
+    info.className = "story-info";
+    info.innerHTML = `
+      <h3>${escapeHTML(chapter.title)}</h3>
+      <p>Capítulo ${index + 1} · ${plural(chapter.pages.length, "página", "páginas")}</p>
+    `;
+    info.appendChild(starBlock(chapter));
+    card.appendChild(info);
+ 
+    card.addEventListener("click", () => {
+      if (card._lp) { card._lp = false; return; }
+      openChapter(chapter.id);
+    });
+ 
+    attachContextMenu(card, () => chapterMenu(chapter.id));
+    makeDropZone(cover, files => setChapterCover(chapter.id, files[0]));
+ 
+    list.appendChild(card);
+  });
+}
+ 
+function findChapter(chapterId) {
+  const story = stories.find(s => s.id === currentStoryId);
+  return story?.chapters.find(c => c.id === chapterId);
+}
+ 
+function renameChapter(chapterId) {
+  if (!isAdmin) return;
+  const chapter = findChapter(chapterId);
+  if (!chapter) return;
+ 
+  const title = prompt("Nuevo nombre del capítulo:", chapter.title);
+  if (title === null || !title.trim()) return;
+ 
+  chapter.title = title.trim();
+  if (save()) refresh();
+}
+ 
+async function setChapterCover(chapterId, file) {
+  if (!isAdmin) return;
+  const chapter = findChapter(chapterId);
+  if (!chapter) return;
+ 
+  try {
+    const data = await fileToDataURL(file, 600, 900, 0.85);
+    const old = chapter.cover;
+    chapter.cover = data;
+    if (!save()) chapter.cover = old;
+    else refresh();
+  } catch {
+    alert("No pude leer esa imagen. Usa un archivo JPG, PNG o WebP.");
+  }
+}
+ 
+function deleteChapter(chapterId) {
+  if (!isAdmin || !confirm("¿Eliminar este capítulo y sus páginas?")) return;
+  const story = stories.find(s => s.id === currentStoryId);
+  if (!story) return;
+  story.chapters = story.chapters.filter(c => c.id !== chapterId);
+  save();
+  openStory(currentStoryId);
+}
+ 
+/* ---------- Lector y páginas ---------- */
+ 
+function openChapter(chapterId) {
+  currentChapterId = chapterId;
+  currentPageIndex = 0;
+  document.getElementById("home").classList.add("hidden");
+  document.getElementById("detail").classList.add("hidden");
+  document.getElementById("reader").classList.remove("hidden");
+  renderPage();
+}
+ 
+function renderPage() {
+  const chapter = findChapter(currentChapterId);
+  if (!chapter) return;
+ 
+  const page = chapter.pages[currentPageIndex];
+  const content = document.getElementById("readerContent");
+ 
+  content.innerHTML = `
+    <div class="page-reader" id="pageReader">
+      <p>${escapeHTML(chapter.title)}</p>
+      ${page ? `
+        <div id="pageImg"></div>
+        ${page.text ? `<div class="page-text">${escapeHTML(page.text)}</div>` : ""}
+        <p>Página ${currentPageIndex + 1} de ${chapter.pages.length}</p>
+        <div class="reader-controls">
+          <button class="main-button" onclick="previousPage()">← Anterior</button>
+          <button class="main-button" onclick="nextPage()">Siguiente →</button>
+        </div>
+      ` : `
+        <h2>Este capítulo aún no tiene páginas.</h2>
+      `}
+      <div id="starSlot"></div>
+      ${isAdmin ? `
+        <div class="drop-zone">
+          Arrastra aquí las imágenes de las páginas<br>
+          <button class="main-button" id="importPagesBtn" type="button">Importar imágenes</button>
+          ${page ? "<br><small>Clic derecho sobre la página para eliminarla o reemplazarla.</small>" : ""}
+        </div>
+      ` : ""}
+    </div>
+  `;
+ 
+  const reader = content.querySelector("#pageReader");
+  content.querySelector("#starSlot").appendChild(starBlock(chapter));
+ 
+  if (page && page.image) {
+    const img = document.createElement("img");
+    img.src = safeImage(page.image);
+    img.alt = "Página " + (currentPageIndex + 1) + " del cómic";
+    img.draggable = false;
+    img.onerror = () => { img.style.display = "none"; };
+    content.querySelector("#pageImg").appendChild(img);
+  }
+ 
+  if (isAdmin) {
+    makeDropZone(reader, files => addPages(chapter.id, files), true);
+    content.querySelector("#importPagesBtn").onclick = () =>
+      pickImages(true, files => addPages(chapter.id, files));
+    if (page) attachContextMenu(reader, () => pageMenu(page.id));
+  }
+}
+ 
+async function addPages(chapterId, files) {
+  if (!isAdmin) return;
+  const chapter = findChapter(chapterId);
+  if (!chapter) return;
+ 
+  files.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+ 
+  const firstNew = chapter.pages.length;
+  let added = 0;
+  let failed = false;
+ 
+  for (const file of files) {
+    try {
+      const data = await fileToDataURL(file, 1400, 2000, 0.82);
+      chapter.pages.push({ id: id(), image: data, text: "" });
+      if (!save()) {
+        chapter.pages.pop();
+        break;
+      }
+      added++;
+    } catch {
+      failed = true;
+    }
+  }
+ 
+  if (failed && !added) alert("No pude leer esas imágenes. Usa archivos JPG, PNG o WebP.");
+  if (added) currentPageIndex = firstNew;
+  renderPage();
+}
+ 
+async function replacePageImage(pageId, file) {
+  if (!isAdmin) return;
+  const chapter = findChapter(currentChapterId);
+  const page = chapter?.pages.find(p => p.id === pageId);
+  if (!page) return;
+ 
+  try {
+    const data = await fileToDataURL(file, 1400, 2000, 0.82);
+    const old = page.image;
+    page.image = data;
+    if (!save()) page.image = old;
+    renderPage();
+  } catch {
+    alert("No pude leer esa imagen. Usa un archivo JPG, PNG o WebP.");
+  }
+}
+ 
+function nextPage(silent) {
+  const chapter = findChapter(currentChapterId);
+  if (chapter && currentPageIndex < chapter.pages.length - 1) {
+    currentPageIndex++;
+    renderPage();
+  } else if (!silent) {
+    alert("Has llegado al final del capítulo.");
+  }
+}
+ 
+function previousPage() {
+  if (currentPageIndex > 0) {
+    currentPageIndex--;
+    renderPage();
+  }
+}
+ 
+function deletePage(pageId) {
+  if (!isAdmin || !confirm("¿Eliminar esta página?")) return;
+  const chapter = findChapter(currentChapterId);
+  if (!chapter) return;
+  chapter.pages = chapter.pages.filter(p => p.id !== pageId);
+  currentPageIndex = Math.min(
+    currentPageIndex, Math.max(0, chapter.pages.length - 1)
+  );
+  save();
+  renderPage();
+}
+ 
+function goHome() {
+  hideMenu();
+  document.getElementById("home").classList.remove("hidden");
+  document.getElementById("detail").classList.add("hidden");
+  document.getElementById("reader").classList.add("hidden");
+}
+ 
+function backToChapters() {
+  openStory(currentStoryId);
+}
+ 
+/* ---------- Copias de seguridad ---------- */
+ 
+function exportBackup() {
+  if (!isAdmin) return;
+  const blob = new Blob([JSON.stringify(stories, null, 2)], {
+    type: "application/json"
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "mispero-comic-copia.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+ 
+function importBackup() {
+  if (!isAdmin) return;
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = ".json,application/json";
+ 
+  input.onchange = () => {
+    const file = input.files[0];
+    if (!file) return;
+ 
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result);
+        if (!Array.isArray(data)) throw new Error("Formato incorrecto");
+        if (!confirm("Esto reemplazará las historias actuales. ¿Continuar?")) return;
+        stories = data;
+        normalize();
+        save();
+        goHome();
+        alert("Biblioteca importada.");
+      } catch {
+        alert("El archivo JSON no es válido.");
+      }
+    };
+    reader.readAsText(file);
+  };
+ 
+  input.click();
+}
+ 
+renderStories();
+</script>
+</body>
+</html>
+ 
